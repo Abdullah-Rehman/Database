@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,6 +27,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -35,6 +39,8 @@ public class MainActivity extends AppCompatActivity
     DBHelper dbHelper;
     TextView tvData;
     AlertDialog.Builder alertDialog;
+    List<String> dataList = new ArrayList<>();
+    ArrayAdapter<String> listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +90,10 @@ public class MainActivity extends AppCompatActivity
         btnAdd = (Button) findViewById(R.id.btnAdd);
         btnShow = (Button) findViewById(R.id.btnShow);
         etName = (EditText) findViewById(R.id.etName);
-//        listRecords = (ListView) findViewById(R.id.listRecords);
+        listRecords = (ListView) findViewById(R.id.listRecords);
+        listAdapter = new ArrayAdapter<String>(MainActivity.this,
+                android.R.layout.simple_list_item_1, dataList);
+        listRecords.setAdapter(listAdapter);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,16 +110,19 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 JSONArray resultArray = dbHelper.getAllRecords();
+                dataList.clear();
                 for(int i=0; i<resultArray.length(); i++){
                     try {
                         JSONObject object = resultArray.getJSONObject(i);
                         String id = object.getString("id");
                         String name = object.getString("name");
-                        tvData.append(id + " "+ name + "\n");
+                        dataList.add(name);
+//                        tvData.append(id + " "+ name + "\n");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+                listAdapter.notifyDataSetChanged();
                 Log.d("MainActivity", "Test");
             }
         });

@@ -33,7 +33,13 @@
             android:layout_height="wrap_content"
             android:text="Show Records"/>
     </LinearLayout>
+    <ListView
+        android:id="@+id/listRecords"
+        android:layout_below="@id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <TextView
+        android:visibility="invisible"
         android:id="@+id/tvData"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
